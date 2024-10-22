@@ -14,30 +14,32 @@ class MinimaxPlayer(ChessAgent):
         else:
             move = self.minimax(board, depth, False)
         
-        print(move)
+        # print(move)
         possible_moves: list[tuple[Square, Square]] = []
         for square in board.squares:
             if square.occupying_piece != None and square.occupying_piece.color == self.color:
                 for target in square.occupying_piece.get_valid_moves(board):
                     possible_moves.append((square, target))
-        print(possible_moves)
+        # print(possible_moves)
         return possible_moves[move[1]]
     
     
-    def minimax(self, board: Board, depth: int, isMaximizing: bool, moveIndex=-1):
+    def minimax(self, board: Board, depth: int, isMaximizing: bool):
         # base case  
         if depth == 0 or board.is_in_checkmate("white") or board.is_in_checkmate("black"):
-            return (board.get_evaluation(), moveIndex) 
+            return (board.get_evaluation(), -1) 
         
+
+        index = -1
         # maximizing player
         if isMaximizing:
             possible_boards = self.get_possible_boards(board, "white")
             maxEval = -math.inf
             for i in range(len(possible_boards)):
-                eval, newIndex = self.minimax(possible_boards[i], depth - 1, False, i)
+                eval, ind = self.minimax(possible_boards[i], depth - 1, False)
                 if (maxEval <= eval):
                     maxEval = eval
-                    index = newIndex
+                    index = i
             return (maxEval, index) 
 
         # minimizing player
@@ -45,10 +47,10 @@ class MinimaxPlayer(ChessAgent):
             minEval = math.inf
             possible_boards = self.get_possible_boards(board, "black")
             for i in range(len(possible_boards)):
-                eval, newIndex = self.minimax(possible_boards[i], depth - 1, True, i)
+                eval, ind = self.minimax(possible_boards[i], depth - 1, True)
                 if (minEval >= eval):
                     minEval = eval
-                    index = newIndex
+                    index = i
             return (minEval, index)
 
         
