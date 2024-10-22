@@ -7,12 +7,15 @@ import random
 import math
 
 class MinimaxPlayer(ChessAgent):
+    def __init__(self, color, depth=1):
+        self.color = color
+        self.depth = depth
+
     def choose_action(self, board: Board):
-        depth = 2
         if board.turn == "white":
-            move = self.minimax(board, depth, True)
+            move = self.minimax(board, self.depth, True)
         else:
-            move = self.minimax(board, depth, False)
+            move = self.minimax(board, self.depth, False)
         
         # print(move)
         possible_moves: list[tuple[Square, Square]] = []
